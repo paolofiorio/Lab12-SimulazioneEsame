@@ -5,8 +5,12 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.Month;
+import java.time.Year;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.model.Distretto;
 import it.polito.tdp.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,13 +30,13 @@ public class CrimesController {
     private URL location;
 
     @FXML // fx:id="boxAnno"
-    private ComboBox<?> boxAnno; // Value injected by FXMLLoader
+    private ComboBox<Year> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxMese"
-    private ComboBox<?> boxMese; // Value injected by FXMLLoader
+    private ComboBox<Month> boxMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGiorno"
-    private ComboBox<?> boxGiorno; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxGiorno; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnCreaReteCittadina"
     private Button btnCreaReteCittadina; // Value injected by FXMLLoader
@@ -49,10 +53,37 @@ public class CrimesController {
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
     	
+    	if (boxAnno.getValue() == null) {
+    		txtResult.setText("Scegliere anno");
+    		return;
+    	}
+    	
+    	model.creaGrafo(boxAnno.getValue());
+    	
+    	for (Distretto d: model.getGraph().vertexSet()) {
+    		txtResult.appendText("Distretto "+d.getId() + " :\n" + d.getVicini() + "\n");
+    	}
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	
+    	txtResult.clear();
+    	
+    	int n = 0;
+    	
+    	try {
+    		n = Integer.parseInt(txtN.getText());
+    	}
+    	catch (NumberFormatException e) {
+    		txtResult.setText("valore di N non valido");
+    		e.printStackTrace();
+    	}
+    	if (boxAnno.getValue() == null || boxMese.getValue() == null || boxGiorno.getValue() == null || n > 10 || n < 1) {
+    		txtResult.setText("Errore nei dati inseriti");
+    		return;
+    	}
+    	
 
     }
 
@@ -70,5 +101,13 @@ public class CrimesController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	
+    	boxAnno.getItems().addAll(model.getAnni());
+    	for (int i=1; i<13; i++) {
+    		boxMese.getItems().addAll(Month.of(i));
+    	}
+    	for (int i=1; i<32; i++) {
+    		boxGiorno.getItems().addAll(i);
+    	}
     }
 }
