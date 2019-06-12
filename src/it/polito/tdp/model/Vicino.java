@@ -1,40 +1,32 @@
 package it.polito.tdp.model;
 
-public class Vicino implements Comparable<Vicino> {
+public class Vicino implements Comparable<Vicino>{
+	private Integer v;
+	private Double distanza;
 	
-	private Distretto distretto;
-	private double distanza;
-	
-	
-	
-	public Vicino(Distretto distretto, double distanza) {
+	public Vicino(Integer v, Double distanza) {
 		super();
-		this.distretto = distretto;
+		this.v = v;
 		this.distanza = distanza;
 	}
 	
-	public Distretto getDistretto() {
-		return distretto;
+	public Integer getV() {
+		return v;
 	}
-	public void setDistretto(Distretto distretto) {
-		this.distretto = distretto;
+	public void setV(Integer v) {
+		this.v = v;
 	}
-	public double getDistanza() {
+	public Double getDistanza() {
 		return distanza;
 	}
-	public void setDistanza(double distanza) {
+	public void setDistanza(Double distanza) {
 		this.distanza = distanza;
 	}
 
 	@Override
-	public int compareTo(Vicino altro) {
-		return (int)(this.distanza - altro.distanza);
+	public int compareTo(Vicino o) {
+		return this.distanza.
+				compareTo(o.getDistanza());
 	}
-
-	@Override
-	public String toString() {
-		return "Distretto numero " + distretto.getId() + " a distanza di " + distanza +" km";
-	}
-
 	
 }
